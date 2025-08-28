@@ -12,8 +12,8 @@ Balance high service levels (≥95%) with lower total inventory costs by simulat
 ## Method
 1. Forecast 91 days of demand with Holt–Winters (multiplicative).
 2. Model demand uncertainty using proportional Normal noise:
-   - μₜ = forecast mean
-   - σₜ = σ_log · μₜ  (σ_log from training residuals)
+   - forecast mean
+   - stdev = σ_log · μₜ  (σ_log from training residuals)
 3. Simulate 10,000 scenarios of daily demand.
 4. Evaluate baseline policy (R, Q).
 5. Grid search around baseline to find the cost-optimal policy that meets service ≥95%.
