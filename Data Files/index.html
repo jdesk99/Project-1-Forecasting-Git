@@ -4,12 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Forecast-Driven Inventory Policy · Case Study</title>
-  <meta name="description" content="Holt-Winters (multiplicative) + Monte Carlo to hit a 95% service target at lower cost. 9% lower total cost and 24 fewer POs/year." />
-  <!-- Open Graph (nice preview when you paste the link) -->
-  <meta property="og:title" content="Forecast-Driven Inventory Policy" />
-  <meta property="og:description" content="9% lower total cost · ≈95% service · 24 fewer POs/year" />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="hero-chart.jpg" />
+  <meta name="description" content="Holt-Winters (multiplicative) + Monte Carlo to meet a 95% service target at lower cost. 9% lower total cost and 24 fewer POs/year." />
   <style>
     :root{
       --ink:#0F172A; --body:#334155; --muted:#64748B;
@@ -17,7 +12,7 @@
       --radius:20px; --max:1040px;
     }
     *{box-sizing:border-box}
-    body{margin:0; font:16px/1.55 "Helvetica Neue", Helvetica, Arial, sans-serif; color:var(--body); background:#FFFFFF}
+    body{margin:0; font:16px/1.55 "Helvetica Neue", Helvetica, Arial, sans-serif; color:var(--body);}
     .wrap{max-width:var(--max); margin-inline:auto; padding:32px 20px}
     h1{color:var(--ink); font-weight:800; letter-spacing:-0.01em; margin:0 0 8px; font-size: clamp(28px, 5vw, 44px);}
     .sub{color:var(--muted); font-size: clamp(16px, 2.4vw, 20px); margin:0 0 18px}
@@ -34,6 +29,13 @@
 
     .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:28px 0}
     .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:0 6px 24px rgba(2,6,23,.06)}
+    .k{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
     .k h3{margin:0; color:var(--ink); font-size: clamp(22px, 4vw, 30px)}
     .k p{margin:6px 0 0; color:var(--muted); font-size:15px}
 
@@ -41,6 +43,43 @@
     .chart{border-radius:calc(var(--radius) + 6px); overflow:hidden; border:1px solid var(--border); background:#fff}
     .chart img{display:block; width:100%; height:auto}
     .bullets h3{margin:0 0 8px; font-size:20px; color:var(--ink)}
+    .bullets h3.stacked{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      line-height:1.1;
+    }
+    .bullets h3.stacked span{
+      font-weight:700;
+      color:var(--muted);
+      font-size:16px;
+      margin-top:4px;
+    }
+    /* Center bullets in the right-hand card */
+    .bullets{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+    }
+    .bullets .under-heading{ 
+      width:100%;
+      text-align:center;
+    }
+    .bullets ul.clean{
+      display:inline-block;        /* shrink to content so we can center the block */
+      text-align:left;             /* left-align list text */
+      list-style-position: outside;/* bullets sit outside for a clean left edge */
+      padding-left:1.25rem;        /* indent for bullets */
+      margin:0;                    /* remove extra margins */
+    }
+    .bullets ul.clean li{
+      margin:10px 0;
+    }
+    .under-heading {
+      margin-top: 12px;
+    }
     ul.clean{margin:0; padding-left:20px}
     ul.clean li{margin:8px 0; color:#0F172A}
 
@@ -48,9 +87,17 @@
     .tools small{font-weight:700; color:#0F172A}
     .footer{margin:24px 0 12px; color:#94A3B8; font-size:13px}
 
+    /* Method-at-a-glance tiles under the chart */
+    .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:6px 0 10px}
+    .step{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:0 6px 24px rgba(2,6,23,.06); text-align:center}
+    .step h4{margin:0 0 6px; font-size:18px; color:var(--accent)}
+    .step p{margin:0; color:var(--ink); line-height:1.35}
+    .assump{margin-top:10px; text-align:center; font-size:15px; color:#475569; padding:14px 18px; border-radius:var(--radius); border:1px solid var(--border); background:var(--card); box-shadow:0 6px 24px rgba(2,6,23,.06)}
+
     @media (max-width:860px){
       .kpis{grid-template-columns:1fr}
       .grid{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -62,19 +109,19 @@
       <p class="meta">Javier Gallegos · Excel, Tableau, Python</p>
       <div class="rule"></div>
       <div class="cta">
-        <a class="btn btn-primary" href="YOUR_ONE_PAGER_PDF_LINK" target="_blank" rel="noopener">Download 1-pager (PDF)</a>
-        <a class="btn btn-ghost" href="YOUR_REPO_LINK" target="_blank" rel="noopener">View repo (data • workbooks • code)</a>
+        <a class="btn btn-primary" href="./one-pager.pdf" target="_blank" rel="noopener">Download 1-pager (PDF)</a>
+        <a class="btn btn-ghost" href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">View repo (data • workbooks • code)</a>
       </div>
     </header>
 
     <section class="kpis">
       <div class="card k">
-        <h3>9% decrease</h3>
-        <p>in total cost (~$1,684/year)</p>
+        <h3> ~9% decrease</h3>
+        <p>in total cost ($1,684/year)</p>
       </div>
       <div class="card k">
-        <h3>≈ 95%</h3>
-        <p>service level (target met)</p>
+        <h3>≈ 95% service</h3>
+        <p>Service level (target met)</p>
       </div>
       <div class="card k">
         <h3>24 fewer POs/year</h3>
@@ -84,18 +131,48 @@
 
     <section class="grid">
       <figure class="chart">
-        <img src="hero-chart.jpg" alt="Daily demand with 7-day smoothing and trend" />
+        <img src="https://raw.githubusercontent.com/jdesk99/Project-1-Forecasting-Git/main/Data%20Files/images/7%20Day%20Smoothing.png" alt="Daily demand with 7-day smoothing and trend" />
       </figure>
       <aside class="card bullets">
-        <h3>Optimized Policy (grid search)</h3>
-        <ul class="clean">
-          <li><strong>(R, Q):</strong> 86, 49 — meets 95% target</li>
-          <li><strong>Total cost/day:</strong> $46.32 (baseline $50.94)</li>
-          <li><strong>Breakdown:</strong> Holding $29.37 · Ordering $17.10</li>
-          <li><strong>Orders/year:</strong> 125 (baseline 149)</li>
-          <li><strong>Validated:</strong> 10k Monte Carlo simulations</li>
-        </ul>
+        <h3 class="stacked">Optimized Policy <span>(Grid Search)</span></h3>
+        <div class="under-heading">
+          <ul class="clean">
+            <li><strong>(R, Q):</strong> 86, 49 — meets ≥95% service</li>
+            <li><strong>Total cost/day:</strong> $46.32 (baseline $50.94)</li>
+            <li><strong>Breakdown:</strong> Holding $29.37 · Ordering $17.10</li>
+            <li><strong>Orders/year:</strong> 125 (baseline 149)</li>
+            <li><strong>How to run:</strong> <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/blob/main/README.md#how-to-run" target="_blank" rel="noopener">pip + Python script</a></li>
+            <li><strong>Main script:</strong> <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/tree/main/Source%20Code" target="_blank" rel="noopener">Source Code/</a></li>
+            <li><strong>Data:</strong> <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/tree/main/Data%20Files" target="_blank" rel="noopener">Data Files/</a></li>
+          </ul>
+        </div>
       </aside>
+    </section>
+
+    <!-- Method-at-a-glance tiles (mirrors the one-pager) -->
+    <section>
+      <div class="steps">
+        <div class="step">
+          <h4>Data</h4>
+          <p>5 years daily demand<br>(single SKU)</p>
+        </div>
+        <div class="step">
+          <h4>Model Selection</h4>
+          <p>MA(3), MA(12), SES, DES,<br>Holt‑Winters (weekly)<br>Train: years 1–4;<br>Validate: year 5 (MAE)</p>
+        </div>
+        <div class="step">
+          <h4>Disaggregation</h4>
+          <p>Weekly → daily via<br>day‑of‑week factors</p>
+        </div>
+        <div class="step">
+          <h4>Inventory Optimization</h4>
+          <p>Baseline R,Q (analytics)<br>Monte Carlo demand sims<br>R–Q grid search<br>Min‑cost ≥95% service</p>
+        </div>
+      </div>
+
+      <div class="assump">
+        Assumptions: Lead time 5 days, Service Level Z: 1.65, Holding cost: $1/unit/day, order cost $50
+      </div>
     </section>
 
     <section class="card">
@@ -106,7 +183,7 @@
     </section>
 
     <footer class="footer">
-      © Javier Gallegos · <a href="YOUR_REPO_LINK" target="_blank" rel="noopener">Repo</a> · <a href="YOUR_ONE_PAGER_PDF_LINK" target="_blank" rel="noopener">PDF</a>
+      © Javier Gallegos · <a href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">Repo</a> · <a href="./one-pager.pdf" target="_blank" rel="noopener">PDF</a>
     </footer>
   </main>
 </body>
