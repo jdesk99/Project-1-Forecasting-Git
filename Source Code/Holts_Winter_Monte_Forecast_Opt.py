@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
+# ============================================================
+# 0. Load dependencies and input data
+#    - If this still fails, you can replace this chunk with a direct 
+#      df = pd.read_excel("path/to/90_Days_Winning_HW_Forecast.xlsx") 
+#      pointing to a local copy of the file
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 FILENAME = "90_Days_Winning_HW_Forecast.xlsx"
 preferred = BASE_DIR / "datafiles" / "raw" / FILENAME
@@ -10,21 +16,25 @@ try:
 except StopIteration:
     raise FileNotFoundError(f"Could not find {FILENAME} under {BASE_DIR}. Place it in datafiles/raw/ or anywhere in the project tree.")
 
+# ============================================================
+
+
+
 
 
 # ============================================================
 # Project 1: Demand Forecasting & Inventory Optimization
-# Code/analysis starts here
+# Code analysis begins here with forecast arrays and problem size
 # ============================================================
 
-# Holt–Winters (multiplicative) forecast means — daily μ_t
+# Holt–Winters (multiplicative) forecast that will become means in normal curve distribution
 forecast = df['Forecast'] 
 forecast_np = forecast.to_numpy()
 n_days = len(df)
 
-
-# Inventory Policy Inputs
-#_________________________________________________
+# ============================================================
+# 1. Inventory policy inputs (R,Q)
+# ============================================================
 
 LEAD_TIME   = 5         #supplier lead_time in days
 SERVICE_Z   = 1.65      #(95% service target)
@@ -34,21 +44,20 @@ ORDER_COST  = 50.0      # fixed cost per purchase order
 average_daily_demand = forecast.mean()
 log_residual_stdev = df['stdev'].values[0]
 
-#Per day expected demand
+# Per-day forecasts over the lead time window
 lead_time_daily_forecast = forecast_np[:LEAD_TIME]
 
-#Lead time demand mean (sum of daily forecasts across the lead time window)
-lead_time_demand_mean = lead_time_daily_forecast.sum()
+#Sum of daily forecasts across the lead time window
+lead_time_expected_demand = lead_time_daily_forecast.sum()
 
-# Lead-time demand standard deviation under proportional-Normal (multiplicative) errors:
-#   Var(L) = σ_log^2 · Σ_t μ_t^2  with  σ_log = STDEV.S(LN(actual/fitted)) (training only)
+# Lead-time demand variance under proportional (multiplicative) Normal errors:
 lead_time_demand_variance = (log_residual_stdev ** 2) * np.sum(lead_time_daily_forecast ** 2)
 lead_time_demand_stdev = float(np.sqrt(lead_time_demand_variance))
 
 
-# Safety stock and reorder point
+# Safety stock, Reorder point (R) policy, and Q (EOQ approximation):
 safety_stock = int(round(SERVICE_Z * lead_time_demand_stdev))
-R            = int(round(lead_time_demand_mean + safety_stock))
+R            = int(round(lead_time_expected_demand + safety_stock))
 Q = int(round(np.sqrt((2 * ORDER_COST * average_daily_demand) / HOLD_COST)))
 
 
@@ -65,8 +74,16 @@ print(f'Order Quantity Q: {Q}\n')
 
 
 
-# Single-scenario simulator (continuous-review R,Q). Demand is integer; receipts arrive after fixed lead time.
-# R includes a safety buffer based on lead-time variance from the multiplicative error calculation.
+# ============================================================
+# 2. Single-scenario simulator (continuous-review R,Q)
+#    - State: on-hand stock, deliveries (days-until-arrival), orders placed
+#    - Each day:
+#        1) Advance deliveries and receive any that hit 0 days
+#        2) Sell up to available stock; track stockouts and holding cost
+#        3) If inventory position (on-hand + pipeline) ≤ R, place a PO of size Q
+#    - Notes: Demand is integer; receipts arrive after fixed LEAD_TIME
+# ============================================================
+
 def run_one (demand, R, Q):
     stock       = R + Q     
     stockouts   = 0
@@ -75,34 +92,41 @@ def run_one (demand, R, Q):
     deliveries  = []
 
     for d in demand:
-        #Receive any shipments whose lead-time has completed
+        # 1) Advance pipeline: decrement days and receive any POs that reach 0
         if deliveries:
-            #decrement days until arrival
             deliveries = [t - 1 for t in deliveries]
             arrived = [t for t in deliveries if t == 0]
             if arrived:
                 stock += Q * len(arrived)
                 deliveries = [t for t in deliveries if t > 0]
 
+        # 2) Satisfy demand up to available stock; shortfall counts as stockout
         sold        = min(stock, d)
         stock      -= sold
         stockouts  += d - sold
         hold_cost  += stock * HOLD_COST
 
+        # 3) Continuous-review reorder rule:
+        #    Inventory position = on-hand + pipeline (each PO contributes Q)
         inventory_position = stock + Q * len(deliveries)
         if inventory_position <= R:
             deliveries.append(LEAD_TIME)
             order_count     += 1
 
+    # KPI calculations:
     service_level = 1 - stockouts / demand.sum()
     avg_order_cost = (order_count * ORDER_COST) / n_days
     avg_hold_cost  = hold_cost / n_days
     avg_total_cost = avg_hold_cost + avg_order_cost
     return service_level, stockouts, avg_hold_cost, order_count, avg_order_cost, avg_total_cost
 
-#_____________________________________________________________
-# Monte Carlo Simulation — 10,000 scenarios
-#_____________________________________________________________
+
+# ============================================================
+# 3. Monte Carlo simulation — 10,000 scenarios
+#    - Sample daily demand with random draws: N(mean = forecast_t, sd = sigma_log * forecast_t)
+#    - Clip at 0 and round to integers to represent unit demand
+#    - Run 'run_one' for each scenario and record KPIs and costs
+# ============================================================
 
 N_SIMS      = 10000
 
@@ -119,32 +143,37 @@ results = pd.DataFrame(
     records,
     columns=['service_level','stockouts','avg_hold_cost','order_count','avg_order_cost','avg_total_cost']
 )
-
 print('\nMonte Carlo Summary (10,000 scenarios)\n')
 print(results.agg(['mean','std']))
 
 
-# Baseline ordering summary (for the current R,Q)
+# Baseline ordering summary (for the baseline R,Q)
 orders_per_day = results['order_count'].mean() / n_days
 orders_per_year = orders_per_day * 365
 ordering_cost_per_year = orders_per_year * ORDER_COST
 print(f"\nBaseline policy: ~{orders_per_year:.0f} POs/year  |  ordering $/year ≈ ${ordering_cost_per_year:,.0f}")
 
-# ──────────────────────────────────────────────────────────────
-# 6. Grid-search over R & Q  (cost vs service trade-off)
-# ──────────────────────────────────────────────────────────────
+
+# ============================================================
+# 4. Grid search over (R, Q)
+#    - Build candidate grids around baseline R and Q
+#    - For each pair, simulate N_GRID_SIMS demand paths; compute mean service and costs
+#    - Keep pairs meeting target_service; rank by total cost (tie-break: higher service)
+# ============================================================
+
 print("\nRunning R-Q grid search (this may take ~3-4 minutes)…")
 TOP_N = 10
 
 # 1) Defining candidate grids centered on baseline (R, Q)
-R_grid = range (R-20, R+20)           # centered around baseline R
-Q_grid = range (Q-20, Q+20)                # centered around baseline Q (near-EOQ)
-N_GRID_SIMS = 100                          # reps per (R,Q) pair
-rng = np.random.default_rng(0)               # fresh seed for grid
+R_grid = range (R-20, R+20)           
+Q_grid = range (Q-20, Q+20)          
+N_GRID_SIMS = 100                         
+rng = np.random.default_rng(0)             # fresh seed for grid
 
 grid_rows = []
 for r in R_grid:
     for q in Q_grid:
+        # Initialize Monte Carlo totals for this (r, q)
         service_total = 0
         hold_total    = 0
         order_total   = 0
@@ -167,72 +196,77 @@ grid_df = pd.DataFrame(
     columns=['R','Q','service_lvl','avg_hold_$','avg_order_$','avg_total_$']
 )
 
-# 2) Keep pairs that hit ≥95 % service
+# 2) Keep pairs that achieve at least the target fill rate (e.g., >= 95%)
 target_service = 0.95
 candidates = grid_df[grid_df["service_lvl"] >= target_service]
 
-# 3) Pick the one with lowest total cost, with guard for empty candidates
+# 3) Rank feasible pairs by lowest total cost/day (tie-break: higher service)
 if candidates.empty:
     print(f"No (R, Q) pair met the {target_service:.0%} fill-rate target. Try widening the search grid or lowering the target.")
-else:
-    # Sort by total cost (asc), tie-break by higher service level (desc)
-    sorted_cands = candidates.sort_values(["avg_total_$","service_lvl"], ascending=[True, False])
-    best = sorted_cands.iloc[0]
+    raise SystemExit(0)
 
-    # Show only the top-N rows for readability
-    print(f"\nGrid-search result (≥{target_service:.0%} service constraint) — Top {TOP_N}")
-    topN = sorted_cands.head(TOP_N)
-    print(topN.to_string(index=False))
+# Sort by total cost (asc), tie-break by higher service level (desc)
+sorted_cands = candidates.sort_values(["avg_total_$","service_lvl"], ascending=[True, False])
+best = sorted_cands.iloc[0]
 
-    print("\nBest policy is  R = {0},  Q = {1}"
-          "\n   service level = {2:.2%}"
-          "\n   holding cost  = ${3:.2f} / day"
-          "\n   ordering cost = ${4:.2f} / day"
-          "\n   total cost    = ${5:.2f} / day"
-          .format(int(best.R), int(best.Q), best.service_lvl, best['avg_hold_$'], best['avg_order_$'], best['avg_total_$']))
-    best_orders_per_day = best['avg_order_$'] / ORDER_COST
-    print(f"   ≈{best_orders_per_day * 365:.0f} POs / year")
+# Show only the top-N rows for readability
+print(f"\nGrid-search result (≥{target_service:.0%} service constraint) — Top {TOP_N}")
+topN = sorted_cands.head(TOP_N)
+print(topN.to_string(index=False))
 
-    # ──────────────────────────────────────────────────────────────
-    # 7. Validate best policy with 10,000 sims & print savings
-    # ──────────────────────────────────────────────────────────────
-    R_best, Q_best = int(best.R), int(best.Q)
+print("\nBest policy is  R = {0},  Q = {1}"
+      "\n   service level = {2:.2%}"
+      "\n   holding cost  = ${3:.2f} / day"
+      "\n   ordering cost = ${4:.2f} / day"
+      "\n   total cost    = ${5:.2f} / day"
+      .format(int(best.R), int(best.Q), best.service_lvl, best['avg_hold_$'], best['avg_order_$'], best['avg_total_$']))
+best_orders_per_day = best['avg_order_$'] / ORDER_COST
+print(f"   ≈{best_orders_per_day * 365:.0f} POs / year")
 
-    # Re-simulate with same N_SIMS as baseline for apples-to-apples
-    rng = np.random.default_rng(123)
-    val_records = []
-    for _ in range(N_SIMS):
-        draws = rng.normal(forecast_np, log_residual_stdev * forecast_np)
-        dpath = np.rint(np.clip(draws, 0, None)).astype(int)
-        val_records.append(run_one(dpath, R_best, Q_best))
 
-    val = pd.DataFrame(
-        val_records,
-        columns=['service_level','stockouts','avg_hold_cost','order_count','avg_order_cost','avg_total_cost']
-    )
+# ============================================================
+# 5. Validate best policy with 10,000 Monte Carlo runs
+#    - Re-simulate the best (R, Q) policy with same N_SIMS as baseline
+#    - Compare service level, holding $, ordering $, and total $ vs baseline
+#    - Report savings per day and annualized ($/year), plus POs/year
+# ============================================================
+R_best, Q_best = int(best.R), int(best.Q)
 
-    # Baseline and candidate means
-    base = results.agg('mean')
-    cand = val.agg('mean')
+# Re-simulate with same N_SIMS as baseline for apples-to-apples
+rng = np.random.default_rng(123)
+val_records = []
+for _ in range(N_SIMS):
+    draws = rng.normal(forecast_np, log_residual_stdev * forecast_np)
+    dpath = np.rint(np.clip(draws, 0, None)).astype(int)
+    val_records.append(run_one(dpath, R_best, Q_best))
 
-    # Day-level savings
-    hold_sav_day  = base['avg_hold_cost']  - cand['avg_hold_cost']
-    order_sav_day = base['avg_order_cost'] - cand['avg_order_cost']
-    total_sav_day = base['avg_total_cost'] - cand['avg_total_cost']
+val = pd.DataFrame(
+    val_records,
+    columns=['service_level','stockouts','avg_hold_cost','order_count','avg_order_cost','avg_total_cost']
+)
 
-    # Year-level savings
-    hold_sav_year  = hold_sav_day  * 365
-    order_sav_year = order_sav_day * 365
-    total_sav_year = total_sav_day * 365
+# Baseline and candidate means
+base = results.agg('mean')
+cand = val.agg('mean')
 
-    # Orders/year comparison
-    orders_per_year_best = (val['order_count'].mean() / n_days) * 365
+# Day-level savings
+hold_sav_day  = base['avg_hold_cost']  - cand['avg_hold_cost']
+order_sav_day = base['avg_order_cost'] - cand['avg_order_cost']
+total_sav_day = base['avg_total_cost'] - cand['avg_total_cost']
 
-    print("\n=== Final Cost Impact Summary (validated with 10,000 sims) ===")
-    print(f"Baseline (R={R}, Q={Q}) — service ≈ {base['service_level']:.2%}, total ≈ ${base['avg_total_cost']:.2f}/day")
-    print(f"Best policy (R={R_best}, Q={Q_best}) — service ≈ {cand['service_level']:.2%}, total ≈ ${cand['avg_total_cost']:.2f}/day")
-    print("\nSavings")
-    print(f"  Total: ${total_sav_day:.2f}/day  →  ≈ ${total_sav_year:,.0f}/year")
-    print(f"    • Holding: ${hold_sav_day:.2f}/day  →  ≈ ${hold_sav_year:,.0f}/year")
-    print(f"    • Ordering: ${order_sav_day:.2f}/day →  ≈ ${order_sav_year:,.0f}/year")
-    print(f"\nPOs/year: baseline ≈ {orders_per_year:.0f} → best ≈ {orders_per_year_best:.0f}")
+# Year-level savings
+hold_sav_year  = hold_sav_day  * 365
+order_sav_year = order_sav_day * 365
+total_sav_year = total_sav_day * 365
+
+# Orders/year comparison
+orders_per_year_best = (val['order_count'].mean() / n_days) * 365
+
+print("\n=== Final Cost Impact Summary (validated with 10,000 sims) ===")
+print(f"Baseline (R={R}, Q={Q}) — service ≈ {base['service_level']:.2%}, total ≈ ${base['avg_total_cost']:.2f}/day")
+print(f"Best policy (R={R_best}, Q={Q_best}) — service ≈ {cand['service_level']:.2%}, total ≈ ${cand['avg_total_cost']:.2f}/day")
+print("\nSavings")
+print(f"  Total: ${total_sav_day:.2f}/day  →  ≈ ${total_sav_year:,.0f}/year")
+print(f"    • Holding: ${hold_sav_day:.2f}/day  →  ≈ ${hold_sav_year:,.0f}/year")
+print(f"    • Ordering: ${order_sav_day:.2f}/day →  ≈ ${order_sav_year:,.0f}/year")
+print(f"\nPOs/year: baseline ≈ {orders_per_year:.0f} → best ≈ {orders_per_year_best:.0f}")
