@@ -21,8 +21,14 @@
     .rule{height:1px; background:var(--border); margin:18px 0 24px}
 
     .cta{display:flex; gap:12px; flex-wrap:wrap}
+    .cta-stack{flex-direction:column; align-items:center}
+    /* Side-by-side Methods tile and stacked CTAs */
+    .tools-layout{display:flex; gap:var(--gap); align-items:stretch; margin-top:var(--gap)}
+    .tools-card{flex:0 0 calc(50% - 8px); width:auto; min-height:0; display:flex; flex-direction:column; justify-content:center; align-items:center; align-self:stretch}
+    .cta-side{display:flex; flex-direction:column; gap:12px; align-items:stretch; justify-content:center; padding-top:0; padding-bottom:0; flex:0 0 calc(50% - 8px)}
+    .cta-side .btn{width:100%; padding:10px 14px}
     .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px;
-         padding:14px 18px; border-radius:var(--radius); text-decoration:none; font-weight:700}
+         padding:14px 18px; border-radius:var(--radius); text-decoration:none; font-weight:700; border:2px solid transparent}
     .btn-primary{background:var(--accent); color:#fff; box-shadow:0 6px 24px rgba(37,99,235,.18)}
     .btn-primary:hover{background:var(--accentDark)}
     .btn-ghost{background:#fff; color:var(--accent); border:2px solid var(--accent)}
@@ -84,33 +90,34 @@
     ul.clean{margin:0; padding-left:20px}
     ul.clean li{margin:8px 0; color:#0F172A}
 
+    /* Methods & Tools card — match page style (left aligned, card heading) */
     .tools{
       display:flex;
-      align-items:center;
-      justify-content:center;   /* center contents */
-      gap:10px;                 /* tighter gaps */
-      flex-wrap:wrap;
+      flex-direction:column;   /* heading above, tags below */
+      align-items:center;      /* center horizontally */
+      justify-content:flex-start;
+      gap:10px;
       color:#475569;
       text-align:center;
     }
+    .tools-tags{display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap}
     .tools-card{
-      padding:12px 16px !important;
-      margin-top:16px; /* extra space above the Methods & Tools card */
+      padding:0 18px !important; /* remove vertical padding to match buttons block height */
+      margin-top:0;               /* align with CTA card */
     }
-    .tools small{
+    .tools-card h3{
+      margin:0 0 6px;
+      font-size:18px;          /* larger heading */
+      color:var(--muted);      /* lighter to reduce emphasis */
       font-weight:700;
-      color:#0F172A;
-      font-size:14px;           /* smaller label */
-      margin-right:6px;
-      letter-spacing:.2px;
     }
     .tools .tag{
-      display:inline-block;
-      padding:4px 12px;         /* smaller pill */
+      display:inline-block;     /* place tags on one row */
+      padding:4px 12px;         /* slightly larger pill */
       border:1px solid var(--border);
       border-radius:999px;
       font-weight:600;
-      font-size:13px;           /* smaller text */
+      font-size:13px;           /* larger text */
       color:#475569;
       background:#fff;
       line-height:1.2;
@@ -129,6 +136,9 @@
       .kpis{grid-template-columns:1fr}
       .grid{grid-template-columns:1fr}
       .steps{grid-template-columns:1fr}
+      .tools-layout{flex-direction:column}
+      .tools-card{width:auto}
+      .cta-side .btn{width:100%}
     }
   </style>
 </head>
@@ -136,13 +146,10 @@
   <main class="wrap">
     <header>
       <h1>Forecast-Driven Inventory Policy</h1>
-      <p class="sub">Holt-Winters (multiplicative) + Monte Carlo to meet a 95% service target at lower cost.</p>
-      <p class="meta">Javier Gallegos · Excel, Tableau, Python</p>
+      <p class="sub">Using Holt-Winters (multiplicative) + Monte Carlo to meet a 95% service target at lower cost.</p>
+      <p class="meta">By Javier Gallegos · <a href="../Data%20Files/Forecasting%20Project%20Brief.pdf" target="_blank" rel="noopener">Project brief (PDF)</a> · <a href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">Repo</a></p>
       <div class="rule"></div>
-      <div class="cta">
-        <a class="btn btn-primary" href="./one-pager.pdf" target="_blank" rel="noopener">Read the Project Brief (PDF)</a>
-        <a class="btn btn-ghost" href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">View repo (data • workbooks • code)</a>
-      </div>
+      
     </header>
 
     <section class="kpis">
@@ -202,21 +209,29 @@
       </div>
 
       <div class="assump">
-        Assumptions: Lead time 5 days, Service Level Z: 1.65, Holding cost: $1/unit/day, order cost $50
+        Assumptions: Lead time 5 days, Service Level Z: 1.65, Holding cost: $1/unit/day, Order Cost: $50/purchase order
       </div>
     </section>
 
-    <section class="card tools-card">
-      <div class="tools">
-        <small>Methods &amp; Tools</small>
-        <span class="tag">Excel</span>
-        <span class="tag">Python</span>
-        <span class="tag">Tableau</span>
+    <section class="tools-layout">
+      <div class="card tools-card">
+        <div class="tools">
+          <h3>Methods &amp; Tools</h3>
+          <div class="tools-tags">
+            <span class="tag">Excel</span>
+            <span class="tag">Python</span>
+            <span class="tag">Tableau</span>
+          </div>
+        </div>
+      </div>
+      <div class="cta cta-side">
+        <a class="btn btn-primary" href="../Data%20Files/Forecasting%20Project%20Brief.pdf" target="_blank" rel="noopener">Read the Project Brief (PDF)</a>
+        <a class="btn btn-ghost" href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">View repo (data • workbooks • code)</a>
       </div>
     </section>
 
     <footer class="footer">
-      © Javier Gallegos · <a href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">Repo</a> · <a href="./one-pager.pdf" target="_blank" rel="noopener">PDF</a>
+      © Javier Gallegos · <a href="https://github.com/jdesk99/Project-1-Forecasting-Git" target="_blank" rel="noopener">Repo</a> · <a href="../Data%20Files/Forecasting%20Project%20Brief.pdf" target="_blank" rel="noopener">PDF</a>
     </footer>
   </main>
 </body>
