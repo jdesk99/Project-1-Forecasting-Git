@@ -99,12 +99,13 @@
       gap:10px;
       color:#475569;
       text-align:center;
-      margin-top:-10px;        /* tighten space above heading further */
+      margin-top:0;            /* avoid overflow on mobile */
     }
     .tools-tags{display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap}
     .tools-card{
       padding:0 18px !important; /* remove vertical padding to match buttons block height */
       margin-top:0;               /* align with CTA card */
+      overflow:hidden;            /* prevent slight text spill on iOS */
     }
     .tools-card h3{
       margin:0 0 6px;
@@ -143,6 +144,11 @@
       .tools-tags{flex-wrap:wrap}
       .tools .tag{font-size:14px; padding:3px 10px}
       .cta-side .btn{width:100%}
+    }
+
+    /* Desktop fine-tune: slight nudge for heading alignment */
+    @media (min-width:1024px){
+      .tools{ margin-top:-6px }
     }
   </style>
 </head>
