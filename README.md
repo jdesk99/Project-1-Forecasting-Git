@@ -31,6 +31,10 @@ Balance high service levels (≥95%) with lower total inventory costs by simulat
 - **Savings:** ≈ $419 over 91 days (≈$1.7K annualized)  
 
 ---
+## Landing Page
+https://jdesk99.github.io/Project-1-Forecasting-Git/
+---
+
 
 ## How to Run
 ```bash
