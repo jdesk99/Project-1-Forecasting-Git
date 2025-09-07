@@ -99,6 +99,7 @@
       gap:10px;
       color:#475569;
       text-align:center;
+      margin-top:-10px;        /* tighten space above heading further */
     }
     .tools-tags{display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:nowrap}
     .tools-card{
@@ -107,17 +108,17 @@
     }
     .tools-card h3{
       margin:0 0 6px;
-      font-size:18px;          /* larger heading */
+      font-size:16px;          /* match Read button text size */
       color:var(--muted);      /* lighter to reduce emphasis */
       font-weight:700;
     }
     .tools .tag{
       display:inline-block;     /* place tags on one row */
-      padding:4px 12px;         /* slightly larger pill */
+      padding:4px 12px;         /* scale with 16px text */
       border:1px solid var(--border);
       border-radius:999px;
-      font-weight:600;
-      font-size:13px;           /* larger text */
+      font-weight:400;          /* match paragraph weight */
+      font-size:16px;           /* match Read button text size */
       color:#475569;
       background:#fff;
       line-height:1.2;
