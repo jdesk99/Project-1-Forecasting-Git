@@ -8,7 +8,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 - Goal: Minimize total inventory cost while achieving ≥95% service.
 - Scope: 5 years of daily demand (single SKU), weekly HW forecast disaggregated to daily, grid-search optimization, 10k-run validation.
 - Live page: https://jdesk99.github.io/Project-1-Forecasting-Git/
-- Project brief: `docs/brief.html`
+- Project brief: <a href="./docs/brief.html" target="_blank" rel="noopener">Read the project brief</a>
 
 ---
 
