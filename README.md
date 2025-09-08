@@ -19,13 +19,6 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 
 ---
 
-## Data & Modeling Assets
-- Raw demand and forecast: `Data Files/Raw/90_Days_Winning_HW_Forecast.xlsx`
-- Model selection workbook (MAE): `Data Files/Processed/Model Selection.xlsx`
-- Visual artifacts (Tableau/exports): `Data Files/images/`
-
----
-
 ## Given Business Inputs
 - Lead time: 5 days
 - Service target: 95% (Z=1.65)
@@ -53,7 +46,17 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
   - Validation comparison and annualized savings
 - Visuals: Key figures in `Data Files/images/` (e.g., 7‑day smoothing) are showcased on the [landing page](https://jdesk99.github.io/Project-1-Forecasting-Git/).
 
+
 ---
+
+## Data & Modeling Assets
+- Raw demand and forecast: `Data Files/Raw/90_Days_Winning_HW_Forecast.xlsx`
+- Model selection workbook (MAE): `Data Files/Processed/Model Selection.xlsx`
+- Visual artifacts (Tableau/exports): `Data Files/images/`
+
+---
+
+
 
 ## Repository Structure
 - **Data:**
@@ -68,7 +71,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 
 ---
 
-
+---
 
 ---
 
