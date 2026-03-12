@@ -7,15 +7,15 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 ## Overview
 - Goal: Minimize total inventory cost while achieving ≥95% service.
 - Scope: 5 years of daily demand (single SKU), weekly HW forecast disaggregated to daily, grid-search optimization, 10k-run validation.
-- Live page: https://jdesk99.github.io/Project-1-Forecasting-Git/
-- [Read the Full Detailed Project Brief (PDF)](https://jdesk99.github.io/Project-1-Forecasting-Git/brief.html)
+- Live page: https://jdesk99.github.io/Project-1-Forecasting-Git/docs/index-round-draft.html
+- [Read the Full Detailed Project Brief (PDF)](https://jdesk99.github.io/Project-1-Forecasting-Git/Data%20Files/Forecasting%20Project%20Brief.pdf)
 
 ---
 
 ## Results
 - Baseline (R=92, Q=42): ≈96.8% service · ≈$50.94/day · ≈149 POs/year
-- Optimized (R=86, Q=49): ≈95.0% service · ≈$46.32/day · ≈125 POs/year
-- **Savings: ≈$419 over 91 days (≈$1,684/year) and ≈24 fewer POs/year**
+- Optimized (R=86, Q=49): ≈95.0% service · ≈$46.33/day · ≈125 POs/year
+- **Savings: ≈$420 over 91 days (≈$1,683/year) and ≈24 fewer POs/year**
 
 ---
 
@@ -44,7 +44,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
   - Grid-search Top N (feasible ≥95% service)
   - Best policy metrics and POs/year
   - Validation comparison and annualized savings
-- Visuals: Key figures in `Data Files/images/` (e.g., 7‑day smoothing) are showcased on the [landing page](https://jdesk99.github.io/Project-1-Forecasting-Git/).
+- Visuals: Key figures in `Data Files/images/` (e.g., 7‑day smoothing) are showcased on the [landing page](https://jdesk99.github.io/Project-1-Forecasting-Git/docs/index-round-draft.html).
 
 
 ---
@@ -65,8 +65,8 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
   - **(charts):** `Data Files/images/` 
 - **Code:** `Source Code/Holts_Winter_Monte_Forecast_Opt.py`
 - **Docs:** 
-  - **(landing):** `docs/index.html` , 
-  - **(brief):** `docs/brief.html` 
+  - **(landing):** `docs/index-round-draft.html` , 
+  - **(brief):** `Data Files/Forecasting Project Brief.pdf` 
 - Env: `requirements.txt`, `LICENSE` (MIT)
 
 ---
