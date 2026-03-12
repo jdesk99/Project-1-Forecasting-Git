@@ -44,7 +44,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
   - Grid-search Top N (feasible ≥95% service)
   - Best policy metrics and POs/year
   - Validation comparison and annualized savings
-- Visuals: Key figures in `Data Files/images/` (e.g., 7‑day smoothing) are showcased on the [landing page](https://jdesk99.github.io/Project-1-Forecasting-Git/docs/index.html).
+- Visuals: Key figures in `Data Files/images/` (e.g., 7‑day smoothing) are showcased on the [landing page](https://jdesk99.github.io/Project-1-Forecasting-Git/).
 
 
 ---
