@@ -9,6 +9,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 - Scope: 5 years of daily demand (single SKU), weekly HW forecast disaggregated to daily, grid-search optimization, 10k-run validation.
 - [Landing Page](https://jdesk99.github.io/Project-1-Forecasting-Git/)
 - [Read the Full Analysis (PDF)](https://jdesk99.github.io/Project-1-Forecasting-Git/Forecasting%20Full%20Analysis%20Brief.pdf)
+- [SQL Revenue & Concentration Analysis Project](https://jdesk99.github.io/SQL-Revenue-Concentration-Analysis-git/)
 
 ---
 
