@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs-preview",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8091", "--directory", "/Users/mymacbookpro/Library/Mobile Documents/com~apple~CloudDocs/Career/Projects/Demand Forecasting Project/Project-1-Forecasting Git/docs"],
+      "port": 8091
+    }
+  ]
+}

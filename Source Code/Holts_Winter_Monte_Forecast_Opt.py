@@ -214,7 +214,7 @@ print(f"\nGrid-search result (≥{target_service:.0%} service constraint) — To
 topN = sorted_cands.head(TOP_N)
 print(topN.to_string(index=False))
 
-print("\nBest policy is  R = {0},  Q = {1}"
+print("\nBest policy pre-validation:  R = {0},  Q = {1}"
       "\n   service level = {2:.2%}"
       "\n   holding cost  = ${3:.2f} / day"
       "\n   ordering cost = ${4:.2f} / day"
