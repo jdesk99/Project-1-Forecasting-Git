@@ -7,8 +7,8 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 ## Overview
 - Goal: Minimize total inventory cost while achieving ≥95% service.
 - Scope: 5 years of daily demand (single SKU), weekly HW forecast disaggregated to daily, grid-search optimization, 10k-run validation.
-- Live page: https://jdesk99.github.io/Project-1-Forecasting-Git/
-- [Read the Full Detailed Project Brief (PDF)](https://jdesk99.github.io/Project-1-Forecasting-Git/Forecasting%20Project%20Brief.pdf)
+- [Landing Page](https://jdesk99.github.io/Project-1-Forecasting-Git/)
+- [Read the Full Analysis (PDF)](https://jdesk99.github.io/Project-1-Forecasting-Git/Forecasting%20Full%20Analysis%20Brief.pdf)
 
 ---
 
@@ -66,7 +66,7 @@ Business problem: achieve a 95% service level while minimizing inventory cost fo
 - **Code:** `Source Code/Holts_Winter_Monte_Forecast_Opt.py`
 - **Docs:** 
   - **(landing):** `docs/index.html` , 
-  - **(brief):** `Data Files/Forecasting Project Brief.pdf` 
+  - **(brief):** `Data Files/Forecasting Full Analysis Brief.pdf` 
 - Env: `requirements.txt`, `LICENSE` (MIT)
 
 ---
