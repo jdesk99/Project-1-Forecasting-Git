@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "mcp__Claude_Preview__preview_start",
-      "Bash(file \"/Users/mymacbookpro/Library/Mobile Documents/com~apple~CloudDocs/Career/Projects/Demand Forecasting Project/Project-1-Forecasting Git/Data Files/images\"/*)"
-    ]
-  }
-}
