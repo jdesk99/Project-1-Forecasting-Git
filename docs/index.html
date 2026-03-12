@@ -85,9 +85,10 @@
       display: inline-block;
       margin: 0;
       background: var(--slate);
-      color: #b8d0f0;
+      color: #e8f0fa;
       font-family: "DM Mono", monospace;
       font-size: 0.67rem;
+      font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       padding: 0.32rem 0.7rem;
@@ -124,10 +125,10 @@
     .hero-btn-secondary:hover { background: #e8eef5; border-color: #6a94c4; color: var(--slate); }
 
     /* ---- Insight Bar ---- */
-    .insight-bar { margin-top: 0.9rem; background: var(--slate); color: #e0e8f2; padding: 0.85rem 1rem; border-radius: var(--r); }
+    .insight-bar { margin-top: 0.9rem; background: #edf2f8; color: var(--ink); padding: 0.85rem 1rem; border-radius: var(--r); border: 1px solid #c5d5e8; border-left: 3px solid var(--steel); }
     .insight-bar p { margin: 0; font-size: 0.86rem; display: grid; grid-template-columns: auto 1fr; align-items: start; column-gap: 1rem; }
-    .insight-icon { align-self: center; color: #a8cef0; }
-    .insight-bar strong { color: #a8cef0; }
+    .insight-icon { align-self: center; color: var(--steel); }
+    .insight-bar strong { color: var(--steel); }
 
     /* ---- Stat Grid ---- */
     .stat-grid { margin-top: 0.95rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
@@ -145,27 +146,37 @@
     .compare-table { width: 100%; border-collapse: collapse; }
     .compare-table thead th {
       font-family: "DM Mono", monospace;
-      font-size: 0.58rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--muted);
-      padding: 0.7rem 0.9rem;
-      text-align: right;
+      color: var(--ink);
+      padding: 0.75rem 0.9rem;
+      text-align: center;
       border-bottom: 2px solid var(--line);
+      vertical-align: middle;
+      background: rgba(20, 20, 28, 0.025);
     }
-    .compare-table thead th:first-child { text-align: left; padding-left: 1.1rem; }
+    .compare-table thead th:first-child { text-align: center; }
+    .th-param {
+      font-size: 0.65rem;
+      color: var(--steel);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      margin-left: 0.3rem;
+    }
+    .compare-table thead th:nth-child(3) { background: rgba(74, 111, 165, 0.09); }
+    .compare-table tbody td:nth-child(3) { background: rgba(74, 111, 165, 0.04); }
     .compare-table tbody td {
       padding: 0.65rem 0.9rem;
-      text-align: right;
+      text-align: center;
       border-bottom: 1px solid var(--line);
       font-family: "DM Mono", monospace;
       font-size: 0.82rem;
       font-variant-numeric: tabular-nums;
     }
     .compare-table tbody td:first-child {
-      text-align: left;
-      padding-left: 1.1rem;
       font-family: "DM Sans", sans-serif;
       font-weight: 600;
       font-size: 0.84rem;
@@ -175,7 +186,8 @@
     .compare-table .val-opt { color: var(--steel); font-weight: 600; }
     .compare-table .val-delta { color: #3a7d5e; font-weight: 600; }
     .compare-table .val-note { color: var(--muted); font-weight: 400; font-size: 0.72rem; }
-    .compare-table .savings-row td { border-bottom: none; padding-top: 0.8rem; }
+    .compare-table .savings-row td { border-bottom: none; border-top: 2px solid var(--line); padding-top: 0.85rem; padding-bottom: 0.85rem; background: rgba(20, 20, 28, 0.025); }
+    .compare-table .savings-row td:nth-child(3) { background: rgba(74, 111, 165, 0.09); }
     .savings-pill {
       display: inline-flex; align-items: center; gap: 0.3rem;
       background: #e8f5ee; color: #2d6a4f; font-family: "DM Mono", monospace;
@@ -191,7 +203,8 @@
       border-bottom: 1px solid var(--line);
       display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     }
-    .kicker { margin: 0; color: var(--muted); font-family: "DM Mono", monospace; text-transform: uppercase; letter-spacing: 0.11em; font-size: 0.58rem; }
+    .kicker { margin: 0; color: var(--steel); font-family: "DM Mono", monospace; text-transform: uppercase; letter-spacing: 0.11em; font-size: 0.65rem; font-weight: 500; }
+    .panel-head .kicker { color: var(--muted); font-size: 0.6rem; font-weight: 400; }
     .panel h2 { margin: 0.13rem 0 0; font-family: "Playfair Display", serif; font-size: 1.2rem; line-height: 1.12; }
     .tag {
       margin: 0; padding: 0.22rem 0.62rem; min-height: auto;
@@ -202,19 +215,20 @@
     .tag-data { background: #f0ebe0; color: #6f6556; }
     .panel img { display: block; width: calc(100% - 2rem); margin: 0.9rem 1rem; height: auto; border: 1px solid #ece4d5; border-radius: 8px; }
     .panel-note {
-      margin: 0; border-top: 1px solid var(--line); background: var(--cream);
-      padding: 0.64rem 1rem 0.74rem 1.1rem; color: #3a4a5e; font-size: 0.78rem;
+      margin: 0; border-top: 1px solid #c5d5e8; background: #edf2f8;
+      padding: 0.64rem 1rem 0.74rem 1.1rem; color: var(--ink); font-size: 0.78rem;
     }
-    .panel-note strong { color: var(--slate); }
+    .panel-note strong { color: var(--steel); }
 
     /* ---- Bottom Grid ---- */
-    .bottom-grid { margin-top: 0.95rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.95rem; }
+    .bottom-grid { margin-top: 0.95rem; }
     .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; padding: 0.95rem 1rem; position: relative; }
     .card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; }
     .card-policy::before { background: var(--steel); }
     .card-method::before { background: var(--slate); }
     .card .kicker { display: flex; align-items: center; gap: 0.7rem; }
     .card .kicker::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .card-method .kicker { font-size: 0.73rem; }
 
     .policy-detail { margin-top: 0; padding: 0.5rem 0; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 0.62rem; font-size: 0.84rem; }
     .policy-detail:first-of-type { border-top: 0; margin-top: 0.45rem; }
@@ -223,22 +237,26 @@
       letter-spacing: 0.08em; font-size: 0.59rem; font-weight: 500; color: var(--steel);
     }
     .assumptions-note {
-      margin: 0.78rem 0 0; border-left: 4px solid var(--steel);
-      background: #e8eef5; color: #3a4a5e; padding: 0.55rem 0.65rem; font-size: 0.78rem;
+      margin: 0.78rem 0 0; border: 1px solid #c5d5e8; border-left: 3px solid var(--steel);
+      background: #edf2f8; color: var(--ink); padding: 0.55rem 0.65rem; font-size: 0.78rem;
       border-radius: 0 8px 8px 0;
     }
 
     /* Method steps */
-    .method-steps { margin: 0.56rem 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; row-gap: 0.62rem; }
+    .method-steps { margin: 0.9rem 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 0; row-gap: 0; }
     .method-steps li {
       counter-increment: step; margin: 0;
-      display: grid; grid-template-columns: 2rem 1fr; column-gap: 0.58rem;
-      align-items: start; font-size: 0.83rem; line-height: 1.38;
+      display: flex; flex-direction: column; gap: 0.45rem;
+      padding: 0 1.4rem 0 1.4rem;
+      border-left: 1px solid var(--line);
+      font-size: 0.83rem; line-height: 1.48;
     }
+    .method-steps li:first-child { border-left: none; padding-left: 0; }
     .method-steps li::before {
-      content: counter(step); font-family: "Playfair Display", serif;
-      color: #8aadd4; font-size: 2.05rem; line-height: 0.9;
-      align-self: start; transform: translateY(-0.02em);
+      content: "PHASE " counter(step);
+      font-family: "DM Mono", monospace; font-size: 0.6rem;
+      font-weight: 500; letter-spacing: 0.12em;
+      color: var(--steel); line-height: 1;
     }
     .method-steps a { color: var(--slate); text-decoration: underline; text-underline-offset: 2px; }
     .method-steps a:hover { color: var(--steel); }
@@ -270,7 +288,7 @@
       .hero-meta { justify-self: start; text-align: left; }
       .hero-actions { align-items: flex-start; }
       .hero-actions-row { flex-wrap: wrap; }
-      .bottom-grid { grid-template-columns: 1fr; gap: 0; }
+      .method-steps { grid-template-columns: 1fr; row-gap: 0.62rem; }
     }
     @media (max-width: 740px) {
       .page { width: 100%; margin: 0; border: 0; box-shadow: none; padding: 0.7rem; }
@@ -355,23 +373,23 @@
         <thead>
           <tr>
             <th>Metric</th>
-            <th>Baseline (R=92, Q=42)</th>
-            <th>Optimized (R=86, Q=49)</th>
+            <th>Baseline <span class="th-param">R=92 · Q=42</span></th>
+            <th>Optimized <span class="th-param">R=86 · Q=49</span></th>
             <th>Delta</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Service Level</td>
-            <td class="val-base">96.8%</td>
-            <td class="val-opt">95.0%</td>
-            <td class="val-note">-1.8pp (still ≥ 95%)</td>
-          </tr>
-          <tr>
             <td>Total Cost / Day</td>
             <td class="val-base">$50.94</td>
             <td class="val-opt">$46.33</td>
             <td class="val-delta">-$4.61/day</td>
+          </tr>
+          <tr>
+            <td>Service Level</td>
+            <td class="val-base">96.8%</td>
+            <td class="val-opt">95.0%</td>
+            <td class="val-note">-1.8pp (still ≥ 95%)</td>
           </tr>
           <tr>
             <td>Holding Cost / Day</td>
@@ -392,13 +410,16 @@
             <td class="val-delta">-24</td>
           </tr>
           <tr class="savings-row">
-            <td>Annualized Savings</td>
-            <td></td>
-            <td></td>
-            <td><span class="savings-pill">↓ $1,683 / year</span></td>
+            <td>Annualized Total</td>
+            <td class="val-base">$18,593 / yr</td>
+            <td class="val-opt">$16,910 / yr</td>
+            <td><span class="savings-pill">↓ $1,683 / yr</span></td>
           </tr>
         </tbody>
       </table>
+      <div class="assumptions-note">
+        <strong>Assumptions:</strong> Lead time 5 days · Service Z: 1.65 (95%) · Holding: $1/unit/day · Order: $50/PO
+      </div>
     </section>
 
     <!-- DASHBOARD PANEL -->
@@ -415,38 +436,17 @@
         alt="Tableau dashboard showing daily demand with 7-day smoothing, monthly trend with labeled peaks, and monthly seasonality overlay across 5 years of data."
       >
       <p class="panel-note">
-        Exploratory analysis across <strong>5 years of daily demand</strong> revealed an upward trend,
-        recurring monthly seasonality, and high day-to-day variability — patterns that informed
-        the selection of <strong>Holt-Winters (multiplicative)</strong> as the forecasting model.
+        Exploratory analysis across <strong>5 years of daily demand</strong> surfaced a clear upward trend,
+        recurring monthly seasonality, and high day-to-day variability.
       </p>
     </section>
 
-    <!-- BOTTOM GRID: POLICY + METHODOLOGY -->
-    <section class="bottom-grid" aria-label="Policy results and methodology">
-      <article class="card card-policy">
-        <p class="kicker">Optimized Policy (Grid-Search)</p>
-        <div class="policy-detail">
-          <span class="detail-label">Parameters</span>
-          <span>R = 86 · Q = 49</span>
-        </div>
-        <div class="policy-detail">
-          <span class="detail-label">Cost/Day</span>
-          <span>$46.33 total</span>
-        </div>
-        <div class="policy-detail">
-          <span class="detail-label">Breakdown</span>
-          <span>Holding $29.21 · Ordering $17.12</span>
-        </div>
-        <div class="assumptions-note">
-          <strong>Assumptions:</strong> Lead time 5 days · Service Z: 1.65 (95%) · Holding: $1/unit/day · Order: $50/PO
-        </div>
-      </article>
-
+    <!-- METHODOLOGY -->
+    <section class="bottom-grid" aria-label="Methodology">
       <article class="card card-method">
         <p class="kicker">Methodology</p>
         <ol class="method-steps">
-          <li><span>Explored 5 years of daily demand in Tableau — identified upward trend, monthly seasonality, and high day-to-day variability.</span></li>
-          <li><span>Compared 5 models (MA(3), MA(12), SES, DES, Holt-Winters) on train/holdout split (years 1–4 / year 5). <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/tree/main/Data%20Files/Processed" target="_blank" rel="noopener">HW (multiplicative) won: MAE 3.94 units/day.</a> Forecast disaggregated weekly → daily via day-of-week factors.</span></li>
+          <li><span>Five models benchmarked on a train / holdout split (years 1–4 / year 5) using daily demand. HW (multiplicative) was fit on weekly aggregates then disaggregated back to daily via day-of-week factors for a like-for-like comparison — <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/tree/main/Data%20Files/Processed" target="_blank" rel="noopener">lowest MAE at 3.94 units/day.</a></span></li>
           <li><span>Built continuous-review (R, Q) <a href="https://github.com/jdesk99/Project-1-Forecasting-Git/tree/main/Source%20Code" target="_blank" rel="noopener">simulator</a> with proportional Normal noise (σ ≈ 26% of forecast). Baseline policy (R=92, Q=42) derived via EOQ + safety stock formula.</span></li>
           <li><span>Grid-searched R ± 20, Q ± 20; selected min-cost policy meeting ≥ 95% service. Validated both policies over 10,000 Monte Carlo runs.</span></li>
         </ol>
